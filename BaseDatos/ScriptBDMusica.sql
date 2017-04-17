@@ -1,4 +1,4 @@
-/* Creación y uso de la base de datos Musica */
+/* CreaciÃ³n y uso de la base de datos Musica */
 CREATE DATABASE Musica
 GO
 
@@ -341,7 +341,7 @@ DECLARE @mensaje VARCHAR(MAX)
 DECLARE @resultado INT
 
 SET @Nombre = 'Katie Melua'
-SET @Pais = 'Gran Bretaña'
+SET @Pais = 'Gran BretaÃ±a'
 SET @Id = 1
 
 EXEC @resultado = Procedimiento_ModificarArtista @Id, @Nombre, @Pais, @mensaje OUTPUT
@@ -389,8 +389,8 @@ GO
 DECLARE @mensaje VARCHAR(MAX)
 EXEC Procedimiento_AgregarConcierto 1, 'Londres', '08-Nov-2008', @mensaje OUTPUT
 EXEC Procedimiento_AgregarConcierto 1, 'Utretcht', '01-Nov-2016', @mensaje OUTPUT
-EXEC Procedimiento_AgregarConcierto 3, 'Dublín', '12-Nov-1999', @mensaje OUTPUT
-EXEC Procedimiento_AgregarConcierto 3, 'Dublín', '06-Nov-2001', @mensaje OUTPUT
+EXEC Procedimiento_AgregarConcierto 3, 'DublÃ­n', '12-Nov-1999', @mensaje OUTPUT
+EXEC Procedimiento_AgregarConcierto 3, 'DublÃ­n', '06-Nov-2001', @mensaje OUTPUT
 EXEC Procedimiento_AgregarConcierto 4, 'Nueva York', '15-Jun-2009', @mensaje OUTPUT
 EXEC Procedimiento_ObtenerConciertos
 GO
