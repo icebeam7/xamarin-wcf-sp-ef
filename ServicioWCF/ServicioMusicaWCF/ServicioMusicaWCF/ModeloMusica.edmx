@@ -1,0 +1,494 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MusicaModelo.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Artistas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Pais" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Canciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Titulo" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Duracion" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Conciertos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdArtista" Type="int" Nullable="false" />
+          <Property Name="Lugar" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Fecha" Type="smalldatetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DetallesConcierto">
+          <Key>
+            <PropertyRef Name="IdConcierto" />
+            <PropertyRef Name="IdCancion" />
+          </Key>
+          <Property Name="IdConcierto" Type="int" Nullable="false" />
+          <Property Name="IdCancion" Type="int" Nullable="false" />
+          <Property Name="Orden" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Artista">
+          <End Role="Artistas" Type="Self.Artistas" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Conciertos" Type="Self.Conciertos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artistas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Conciertos">
+              <PropertyRef Name="IdArtista" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cancion">
+          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DetallesConcierto" Type="Self.DetallesConcierto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Canciones">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DetallesConcierto">
+              <PropertyRef Name="IdCancion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Concierto">
+          <End Role="Conciertos" Type="Self.Conciertos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DetallesConcierto" Type="Self.DetallesConcierto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Conciertos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DetallesConcierto">
+              <PropertyRef Name="IdConcierto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="Procedimiento_AgregarArtista" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="Pais" Type="varchar" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_AgregarCancion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Titulo" Type="varchar" Mode="In" />
+          <Parameter Name="Duracion" Type="varchar" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_AgregarConcierto" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdArtista" Type="int" Mode="In" />
+          <Parameter Name="Lugar" Type="varchar" Mode="In" />
+          <Parameter Name="Fecha" Type="smalldatetime" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_AgregarDetalleConcierto" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdConcierto" Type="int" Mode="In" />
+          <Parameter Name="IdCancion" Type="int" Mode="In" />
+          <Parameter Name="Orden" Type="int" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_BuscarArtista" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Procedimiento_BuscarCancion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Procedimiento_BuscarConcierto" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Procedimiento_EliminarArtista" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_EliminarCancion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_EliminarConcierto" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_EliminarDetalleConcierto" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdConcierto" Type="int" Mode="In" />
+          <Parameter Name="IdCancion" Type="int" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_ModificarArtista" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="Pais" Type="varchar" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_ModificarCancion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Titulo" Type="varchar" Mode="In" />
+          <Parameter Name="Duracion" Type="varchar" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_ModificarConcierto" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="IdArtista" Type="int" Mode="In" />
+          <Parameter Name="Lugar" Type="varchar" Mode="In" />
+          <Parameter Name="Fecha" Type="smalldatetime" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_ModificarDetalleConcierto" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdConcierto" Type="int" Mode="In" />
+          <Parameter Name="IdCancion" Type="int" Mode="In" />
+          <Parameter Name="Orden" Type="int" Mode="In" />
+          <Parameter Name="mensaje" Type="varchar(max)" Mode="InOut" />
+        </Function>
+        <Function Name="Procedimiento_ObtenerArtistas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Procedimiento_ObtenerCanciones" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Procedimiento_ObtenerConciertos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Procedimiento_ObtenerDetallesConcierto" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdConcierto" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="MusicaModeloStoreContainer">
+          <EntitySet Name="Artistas" EntityType="Self.Artistas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Canciones" EntityType="Self.Canciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Conciertos" EntityType="Self.Conciertos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DetallesConcierto" EntityType="Self.DetallesConcierto" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Artista" Association="Self.FK_Artista">
+            <End Role="Artistas" EntitySet="Artistas" />
+            <End Role="Conciertos" EntitySet="Conciertos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cancion" Association="Self.FK_Cancion">
+            <End Role="Canciones" EntitySet="Canciones" />
+            <End Role="DetallesConcierto" EntitySet="DetallesConcierto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Concierto" Association="Self.FK_Concierto">
+            <End Role="Conciertos" EntitySet="Conciertos" />
+            <End Role="DetallesConcierto" EntitySet="DetallesConcierto" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MusicaModelo" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Artistas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Pais" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Conciertos" Relationship="Self.FK_Artista" FromRole="Artistas" ToRole="Conciertos" />
+        </EntityType>
+        <EntityType Name="Canciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Duracion" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="DetallesConcierto" Relationship="Self.FK_Cancion" FromRole="Canciones" ToRole="DetallesConcierto" />
+        </EntityType>
+        <EntityType Name="Conciertos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdArtista" Type="Int32" Nullable="false" />
+          <Property Name="Lugar" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Artistas" Relationship="Self.FK_Artista" FromRole="Conciertos" ToRole="Artistas" />
+          <NavigationProperty Name="DetallesConcierto" Relationship="Self.FK_Concierto" FromRole="Conciertos" ToRole="DetallesConcierto" />
+        </EntityType>
+        <EntityType Name="DetallesConcierto">
+          <Key>
+            <PropertyRef Name="IdConcierto" />
+            <PropertyRef Name="IdCancion" />
+          </Key>
+          <Property Name="IdConcierto" Type="Int32" Nullable="false" />
+          <Property Name="IdCancion" Type="Int32" Nullable="false" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Canciones" Relationship="Self.FK_Cancion" FromRole="DetallesConcierto" ToRole="Canciones" />
+          <NavigationProperty Name="Conciertos" Relationship="Self.FK_Concierto" FromRole="DetallesConcierto" ToRole="Conciertos" />
+        </EntityType>
+        <Association Name="FK_Artista">
+          <End Role="Artistas" Type="Self.Artistas" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Conciertos" Type="Self.Conciertos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artistas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Conciertos">
+              <PropertyRef Name="IdArtista" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cancion">
+          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DetallesConcierto" Type="Self.DetallesConcierto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Canciones">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DetallesConcierto">
+              <PropertyRef Name="IdCancion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Concierto">
+          <End Role="Conciertos" Type="Self.Conciertos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DetallesConcierto" Type="Self.DetallesConcierto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Conciertos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DetallesConcierto">
+              <PropertyRef Name="IdConcierto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MusicaEntidades" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Artistas" EntityType="Self.Artistas" />
+          <EntitySet Name="Canciones" EntityType="Self.Canciones" />
+          <EntitySet Name="Conciertos" EntityType="Self.Conciertos" />
+          <EntitySet Name="DetallesConcierto" EntityType="Self.DetallesConcierto" />
+          <AssociationSet Name="FK_Artista" Association="Self.FK_Artista">
+            <End Role="Artistas" EntitySet="Artistas" />
+            <End Role="Conciertos" EntitySet="Conciertos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cancion" Association="Self.FK_Cancion">
+            <End Role="Canciones" EntitySet="Canciones" />
+            <End Role="DetallesConcierto" EntitySet="DetallesConcierto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Concierto" Association="Self.FK_Concierto">
+            <End Role="Conciertos" EntitySet="Conciertos" />
+            <End Role="DetallesConcierto" EntitySet="DetallesConcierto" />
+          </AssociationSet>
+          <FunctionImport Name="Procedimiento_AgregarArtista">
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="Pais" Mode="In" Type="String" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_AgregarCancion">
+            <Parameter Name="Titulo" Mode="In" Type="String" />
+            <Parameter Name="Duracion" Mode="In" Type="String" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_AgregarConcierto">
+            <Parameter Name="IdArtista" Mode="In" Type="Int32" />
+            <Parameter Name="Lugar" Mode="In" Type="String" />
+            <Parameter Name="Fecha" Mode="In" Type="DateTime" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_AgregarDetalleConcierto">
+            <Parameter Name="IdConcierto" Mode="In" Type="Int32" />
+            <Parameter Name="IdCancion" Mode="In" Type="Int32" />
+            <Parameter Name="Orden" Mode="In" Type="Int32" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_BuscarArtista" EntitySet="Artistas" ReturnType="Collection(MusicaModelo.Artistas)">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_BuscarCancion" EntitySet="Canciones" ReturnType="Collection(MusicaModelo.Canciones)">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_BuscarConcierto" EntitySet="Conciertos" ReturnType="Collection(MusicaModelo.Conciertos)">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_EliminarArtista">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_EliminarCancion">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_EliminarConcierto">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_EliminarDetalleConcierto">
+            <Parameter Name="IdConcierto" Mode="In" Type="Int32" />
+            <Parameter Name="IdCancion" Mode="In" Type="Int32" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_ModificarArtista">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="Pais" Mode="In" Type="String" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_ModificarCancion">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Titulo" Mode="In" Type="String" />
+            <Parameter Name="Duracion" Mode="In" Type="String" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_ModificarConcierto">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="IdArtista" Mode="In" Type="Int32" />
+            <Parameter Name="Lugar" Mode="In" Type="String" />
+            <Parameter Name="Fecha" Mode="In" Type="DateTime" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_ModificarDetalleConcierto">
+            <Parameter Name="IdConcierto" Mode="In" Type="Int32" />
+            <Parameter Name="IdCancion" Mode="In" Type="Int32" />
+            <Parameter Name="Orden" Mode="In" Type="Int32" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Procedimiento_ObtenerArtistas" EntitySet="Artistas" ReturnType="Collection(MusicaModelo.Artistas)" />
+          <FunctionImport Name="Procedimiento_ObtenerCanciones" EntitySet="Canciones" ReturnType="Collection(MusicaModelo.Canciones)" />
+          <FunctionImport Name="Procedimiento_ObtenerConciertos" EntitySet="Conciertos" ReturnType="Collection(MusicaModelo.Conciertos)" />
+          <FunctionImport Name="Procedimiento_ObtenerDetallesConcierto" EntitySet="DetallesConcierto" ReturnType="Collection(MusicaModelo.DetallesConcierto)">
+            <Parameter Name="IdConcierto" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="Procedimiento_BuscarArtista_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Pais" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="Procedimiento_BuscarCancion_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Titulo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Duracion" Nullable="false" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="Procedimiento_BuscarConcierto_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="IdArtista" Nullable="false" />
+          <Property Type="String" Name="Lugar" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="Fecha" Nullable="false" Precision="16" />
+        </ComplexType>
+        <ComplexType Name="Procedimiento_ObtenerArtistas_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Pais" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="Procedimiento_ObtenerCanciones_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Titulo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Duracion" Nullable="false" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="Procedimiento_ObtenerConciertos_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="IdArtista" Nullable="false" />
+          <Property Type="String" Name="Lugar" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="Fecha" Nullable="false" Precision="16" />
+        </ComplexType>
+        <ComplexType Name="Procedimiento_ObtenerDetallesConcierto_Result">
+          <Property Type="Int32" Name="IdConcierto" Nullable="false" />
+          <Property Type="Int32" Name="IdCancion" Nullable="false" />
+          <Property Type="Int32" Name="Orden" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MusicaModeloStoreContainer" CdmEntityContainer="MusicaEntidades">
+          <EntitySetMapping Name="Artistas">
+            <EntityTypeMapping TypeName="MusicaModelo.Artistas">
+              <MappingFragment StoreEntitySet="Artistas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Pais" ColumnName="Pais" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Canciones">
+            <EntityTypeMapping TypeName="MusicaModelo.Canciones">
+              <MappingFragment StoreEntitySet="Canciones">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Titulo" ColumnName="Titulo" />
+                <ScalarProperty Name="Duracion" ColumnName="Duracion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Conciertos">
+            <EntityTypeMapping TypeName="MusicaModelo.Conciertos">
+              <MappingFragment StoreEntitySet="Conciertos">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdArtista" ColumnName="IdArtista" />
+                <ScalarProperty Name="Lugar" ColumnName="Lugar" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DetallesConcierto">
+            <EntityTypeMapping TypeName="MusicaModelo.DetallesConcierto">
+              <MappingFragment StoreEntitySet="DetallesConcierto">
+                <ScalarProperty Name="IdConcierto" ColumnName="IdConcierto" />
+                <ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Procedimiento_AgregarArtista" FunctionName="MusicaModelo.Store.Procedimiento_AgregarArtista" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_AgregarCancion" FunctionName="MusicaModelo.Store.Procedimiento_AgregarCancion" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_AgregarConcierto" FunctionName="MusicaModelo.Store.Procedimiento_AgregarConcierto" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_AgregarDetalleConcierto" FunctionName="MusicaModelo.Store.Procedimiento_AgregarDetalleConcierto" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_BuscarArtista" FunctionName="MusicaModelo.Store.Procedimiento_BuscarArtista">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Procedimiento_BuscarCancion" FunctionName="MusicaModelo.Store.Procedimiento_BuscarCancion">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Procedimiento_BuscarConcierto" FunctionName="MusicaModelo.Store.Procedimiento_BuscarConcierto">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Procedimiento_EliminarArtista" FunctionName="MusicaModelo.Store.Procedimiento_EliminarArtista" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_EliminarCancion" FunctionName="MusicaModelo.Store.Procedimiento_EliminarCancion" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_EliminarConcierto" FunctionName="MusicaModelo.Store.Procedimiento_EliminarConcierto" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_EliminarDetalleConcierto" FunctionName="MusicaModelo.Store.Procedimiento_EliminarDetalleConcierto" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_ModificarArtista" FunctionName="MusicaModelo.Store.Procedimiento_ModificarArtista" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_ModificarCancion" FunctionName="MusicaModelo.Store.Procedimiento_ModificarCancion" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_ModificarConcierto" FunctionName="MusicaModelo.Store.Procedimiento_ModificarConcierto" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_ModificarDetalleConcierto" FunctionName="MusicaModelo.Store.Procedimiento_ModificarDetalleConcierto" />
+          <FunctionImportMapping FunctionImportName="Procedimiento_ObtenerArtistas" FunctionName="MusicaModelo.Store.Procedimiento_ObtenerArtistas">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Procedimiento_ObtenerCanciones" FunctionName="MusicaModelo.Store.Procedimiento_ObtenerCanciones">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Procedimiento_ObtenerConciertos" FunctionName="MusicaModelo.Store.Procedimiento_ObtenerConciertos">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Procedimiento_ObtenerDetallesConcierto" FunctionName="MusicaModelo.Store.Procedimiento_ObtenerDetallesConcierto">
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
